@@ -11,12 +11,12 @@ const miniScreen = document.querySelector('.mini-screen');
 buttons.forEach(function(btn) {
   btn.addEventListener("click", function(e) {
     const buttonText = this.textContent.trim();
-
+  
     // Append the clicked button's value to the screen display
     if (!isNaN(buttonText)) {
       if (waitForSquareRoot && screenDisplay.value !== '') {
           firstNumber = parseFloat(screenDisplay.value); 
-          result = Math.sqrt(firstNumber); 
+          result = Math.sqrt(firstNumber);
           screenDisplay.value = result;
           miniScreen.value += `${firstNumber})`;
           waitForSquareRoot = false; // Reset flag
