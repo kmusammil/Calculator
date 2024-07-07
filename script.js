@@ -1,74 +1,88 @@
 let firstNumber = 0;
 let secondNumber = 0;
 let result = 0;
-let action;
-let waitForSquareRoot = false; // Flag to indicate if we are waiting for square root operation
+let action = "+";
+let waitForSquareRoot = false;
 
 const screenDisplay = document.querySelector(".screen");
 const buttons = document.querySelectorAll(".button");
 const miniScreen = document.querySelector('.mini-screen');
 
-buttons.forEach(function(btn) {
-  btn.addEventListener("click", function(e) {
+buttons.forEach((btn) => {
+  btn.addEventListener("click", function() {
     const buttonText = this.textContent.trim();
-  
-    // Append the clicked button's value to the screen display
+
     if (!isNaN(buttonText)) {
-      if (waitForSquareRoot && screenDisplay.value !== '') {
-          firstNumber = parseFloat(screenDisplay.value); 
-          result = Math.sqrt(firstNumber);
-          screenDisplay.value = result;
-          miniScreen.value += `${firstNumber})`;
-          waitForSquareRoot = false; // Reset flag
-      } else {
-          screenDisplay.value += buttonText;
-      }
+      if(screenDisplay.value === "0") screenDisplay.value = "";
+      screenDisplay.value += buttonText
       screenDisplay.scrollLeft = screenDisplay.scrollWidth;
     } else {
-      switch(buttonText) {
-        case "/":
+      switch (buttonText) {
+        case "÷":
         case "X":
         case "-":
         case "+":
         case "%":
-          firstNumber = firstNumber > 0 ? calculate(firstNumber, parseFloat(screenDisplay.value)) : parseFloat(screenDisplay.value);
-          action = buttonText;
-          miniScreen.value += screenDisplay.value + action;
-          screenDisplay.value = '';
-          break;
-        case "=":
-          secondNumber = parseFloat(screenDisplay.value);
-          result = calculate(firstNumber, secondNumber);
-          screenDisplay.value = result;
-          firstNumber = 0;
-          miniScreen.value = '';
-          break;
-        case ".":
-          // Append decimal point if not already present
-          if (!screenDisplay.value.includes('.')) {
-            screenDisplay.value += '.';
-          } else{
-            
+          if (screenDisplay.value === '') {
+            if (buttonText === '-' && screenDisplay.value.length === 0) {
+              screenDisplay.value += '-';
+            }
+          } else {
+            firstNumber = parseFloat(screenDisplay.value);
+            action = buttonText;
+            miniScreen.value += screenDisplay.value + action;
+            screenDisplay.value = '';
           }
           break;
-        case "C": 
+        case "=":
+          if (screenDisplay.value === '') {
+            screenDisplay.value = '';
+          } else {
+            if (waitForSquareRoot) {
+              firstNumber = screenDisplay.value.replace(secondNumber + "√(", "");
+              console.log(secondNumber)
+              if (secondNumber) {
+                result = Math.sqrt(firstNumber) * secondNumber
+                screenDisplay.value = result
+                miniScreen.value = `${secondNumber} x √(${firstNumber}) = ${result}`
+              } else {
+                result = Math.sqrt(firstNumber)
+                miniScreen.value = `√(${firstNumber}) = ${result}`
+                screenDisplay.value = ""
+              }
+            } else {
+              secondNumber = parseFloat(screenDisplay.value);
+              if (action === '÷' && secondNumber === 0) {
+                screenDisplay.value = '∞'
+                miniScreen.value = 'infinity'
+              } else {
+                result = calculate(firstNumber, secondNumber);
+                screenDisplay.value = result;
+                miniScreen.value = `${firstNumber} ${action} ${secondNumber} = ${result}`;
+                firstNumber = 0;
+              }
+            }
+          }
+          break;
+
+        case ".":
+          if (!screenDisplay.value.includes('.')) {
+            screenDisplay.value += '.';
+          }
+          break;
+        case "C":
           screenDisplay.value = '';
           screenDisplay.placeholder = '0';
           miniScreen.value = '';
           firstNumber = 0;
           secondNumber = 0;
           action = null;
-          waitForSquareRoot = false; // Reset the flag
+          waitForSquareRoot = false;
           break;
-        case '√': 
-          if (screenDisplay.value !== '') {
-            // Calculate the square root
-            screenDisplay.value = result; // Display the result
-            miniScreen.value += `√()`;
-          } else {
-            waitForSquareRoot = true; // Set flag to wait for the next number
-            miniScreen.value += `√(`; // Update mini screen to show waiting for square root
-          }
+        case '√':
+          waitForSquareRoot = true
+          secondNumber = screenDisplay.value
+          screenDisplay.value += '√('
           break;
       }
     }
@@ -77,18 +91,16 @@ buttons.forEach(function(btn) {
 
 
 function calculate(num1, num2) {
-  switch(action) { 
+  switch (action) {
     case '+':
       return num1 + num2;
     case '-':
       return num1 - num2;
     case 'X':
       return num1 * num2;
-    case '/':
-      return num1 / num2;
+    case '÷':
+      return num1 / num2
     case '%':
       return num1 * num2 / 100;
-    default:
-      return num1; // In case action is not set, just return the first number
   }
 }
