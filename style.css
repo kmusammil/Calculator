@@ -10,12 +10,18 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+body{
+  background-color: lightcoral;
+}
 .container{
   padding: 20px;
   width: 250px;
   height: 400px;
   background-color: gray;
   border-radius: 8px;
+  margin-left: 40vw;
+  margin-top: 50px;
 }
 
 .buttons{
@@ -34,6 +40,7 @@ input::-webkit-inner-spin-button {
   font-size: 20px;
   box-shadow: 1px 1px 1px #393737;
   background-color: #d1d1cc;
+  /* transition: transform 0.1s; */
 }
 
 .equal,
@@ -80,7 +87,12 @@ input::-webkit-inner-spin-button {
   border: none;
 }
 
+.button:focus,
 .screen:focus,
 .mini-screen:focus{
     outline: none;
+}
+
+.click-effect {
+  transform: scale(0.95, 0.95);
 }

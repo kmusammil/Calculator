@@ -10,6 +10,8 @@ const miniScreen = document.querySelector('.mini-screen');
 
 buttons.forEach((btn) => {
   btn.addEventListener("click", function() {
+   clickedEffect(btn)
+    
     const buttonText = this.textContent.trim();
 
     if (!isNaN(buttonText)) {
@@ -103,4 +105,18 @@ function calculate(num1, num2) {
     case '%':
       return num1 * num2 / 100;
   }
+}
+
+function clickedEffect(btn) {
+  btn.classList.add('click-effect');
+
+    // Remove the 'click-effect' class after 1000ms (1 second)
+    setTimeout(function() {
+      btn.classList.remove('click-effect');
+    }, 100);
+
+
+  btn.addEventListener('focus', function() {
+    btn.classList.add('click-effect');
+  });
 }
